@@ -15,10 +15,36 @@ export default function Home() {
   const [isOpen, setOpen] = useState(false);
   const [searchCity, setSearchCity] = useState("Helsinki");
   const [apiCoord, setApiCoord] = useState({});
+  const [lat, setLat] = useState("60.1695");
+  const [lon, setLon] = useState("24.9355");
   const [units, setUnits] = useState("metric");
+  const [weatherData, setWeatherData] = useState({});
+  const [temp, setTemp] = useState(15);
+  const [weatherMain, setWeatherMain] = useState("Shower");
 
-  const fetchCoordinates = async (searchCity) => {
+  const getWeatherData = async () => {
+    const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=${units}&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
+    console.log(url);
+    try {
+      const response = await axios.get(url);
+      const info = response.data;
+      setWeatherData(info);
+      if (weatherData["current"]["temp"])
+        setTemp(weatherData["current"]["temp"]);
+      console.log(
+        "weatherData.current.weather[0][id] --> " +
+          weatherData["current"]["weather"]["0"]["main"]
+      );
+      if (weatherData["current"]["weather"]["0"]["main"])
+        setWeatherMain(weatherData["current"]["weather"]["0"]["main"]);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const fetchCoordinates = async () => {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
+    console.log(url);
     try {
       const response = await axios.get(url);
       const propertyValues = Object.values(response.data.coord);
@@ -29,8 +55,13 @@ export default function Home() {
   };
 
   useEffect(() => {
-    fetchCoordinates(searchCity);
-  }, [searchCity]);
+    fetchCoordinates();
+    if (apiCoord) {
+      setLat(apiCoord[1]);
+      setLon(apiCoord[0]);
+      getWeatherData();
+    }
+  }, [searchCity, units]);
 
   const handleClick = () => {
     setOpen(!isOpen);
@@ -50,24 +81,24 @@ export default function Home() {
   };
 
   const handleUnitsC = () => {
-    setDegrees("metric");
+    setUnits("metric");
   };
 
   const handleUnitsF = () => {
-    setDegrees("imperial");
+    setUnits("imperial");
   };
 
   return (
-    <main className='max-w-[1280px] grid sm:grid-cols-1 md:grid-cols-2'>
-      <section className='bg-[#1E213A] max-w-[3755px] h-full'>
+    <main className='bg-[#100E1D] max-w-[1440px] grid sm:grid-cols-1 md:grid-cols-4 lg:grid-cols-8'>
+      <section className='bg-[#1E213A] max-w-[625px] max-h-screen '>
         <div className='flex justify-between items-center h-24 max-w-[1280px] mx-auto px-10 pt-10 pb-10 text-white'>
           <CustomButton
             title='Search for Places'
-            containerStyles='bg-[#6E707A] text-[#E7E7EB] mt-20 px-2 py-2'
+            containerStyles='bg-[#6E707A] text-[#E7E7EB] text-sm mt-5 px-2 py-2'
             handleClick={handleClick}
           ></CustomButton>
           <Image
-            className='bg-[#6E707A] text-white rounded-full mt-20 px-2 py-2 cursor-default hover:cursor-pointer'
+            className='bg-[#6E707A] text-white rounded-full mt-5 px-2 py-2 cursor-default hover:cursor-pointer'
             onClick={handleLocalCity}
             src='/my_location.svg'
             alt='img-location'
@@ -87,15 +118,15 @@ export default function Home() {
                 size={30}
               />
             </div>
-            <div className='flex justify-between items-center h-24 max-w-[1240px] mx-auto px-10 pb-10 text-white'>
+            <div className='flex justify-between items-center text-white'>
               <div className='flex justify-between items-center border border-solid border-[#616475] px-2 py-2'>
                 <div>
                   <Image
                     className='bg-[#1E213A] rounded-full'
                     src='/search.svg'
                     alt='img-location'
-                    width={30}
-                    height={30}
+                    width={25}
+                    height={25}
                   />
                 </div>
                 <div>
@@ -142,12 +173,14 @@ export default function Home() {
           </div>
         )}
 
-        {console.log("apiCoordinates final:lon --> " + apiCoord[0])}
-        {console.log("apiCoordinates final:lat --> " + apiCoord[1])}
-
-        <CurrentWeather city={searchCity} />
+        <CurrentWeather
+          temp={temp}
+          units={units}
+          weatherMain={weatherMain}
+          city={searchCity}
+        />
       </section>
-      <section className='bg-[#100E1D] text-white max-w-[1015px] h-full'>
+      <section className='bg-[#100E1D] text-white max-w-[1200px] h-full md:col-start-2 col-span-4'>
         <div className='flex justify-end items-center px-4'>
           <CustomButton
             title='°C'
@@ -160,18 +193,18 @@ export default function Home() {
             handleClick={handleUnitsF}
           ></CustomButton>
         </div>
-        <div className='bg-[#100E1D] mx-6 px-5 py-6 grid grid-cols-2 md:grid-cols-4 gap-10'>
-          <Forecast />
-          <Forecast />
-          <Forecast />
-          <Forecast />
-          <Forecast />
+        <div className='bg-[#100E1D] mx-6 px-5 py-6 grid grid-cols-2 md:grid-cols-6 gap-6'>
+          <Forecast index={1} />
+          <Forecast index={2} />
+          <Forecast index={3} />
+          <Forecast index={4} />
+          <Forecast index={5} />
         </div>
         <div>
           <div className='mx-6 px-5 py-6'>
             <h1>Today's Highlights</h1>
           </div>
-          <div className='bg-[#100E1D] text-white max-w-[1015px] mx-6 px-5 py-6 grid sm:grid-cols-1 md:grid-cols-2'>
+          <div className='bg-[#100E1D] text-white max-w-[1015px] mx-3 px-2 py-6 grid sm:grid-cols-1 md:grid-cols-2 gap-2'>
             <Wind />
             <Humidity />
             <Visibility />

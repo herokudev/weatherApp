@@ -35,12 +35,47 @@ function Location() {
 }
 
 function CurrentWeather(props) {
+  const icon = props.imgCurrent.substring(0, 2);
+  let img_icon = "";
+
+  switch (icon) {
+    case "01":
+      img_icon = "01_Clear.png";
+      break;
+    case "02":
+      img_icon = "02_FewClouds.png";
+      break;
+    case "03":
+      img_icon = "03_scattered.png";
+      break;
+    case "04":
+      img_icon = "04_broken.png";
+      break;
+    case "09":
+      img_icon = "09_Shower.png";
+      break;
+    case "10":
+      img_icon = "10_Rain.png";
+      break;
+    case "11":
+      img_icon = "11_Thunderstorm.png";
+      break;
+    case "13":
+      img_icon = "13_Snow.png";
+      break;
+    case "50":
+      img_icon = "02_FewClouds.png";
+      break;
+    default:
+      img_icon = "09_Shower.png";
+  }
+
   return (
     <main className='bg-[#1E213A] max-w-[1400px] h-full text-white'>
       <div className='bg-[url("/Clouds-bg.png")] flex justify-center items-center'>
         <Image
           className='w-[40%] h-[40%] object-cover'
-          src='/HeavyRain.png'
+          src={`/${img_icon}`}
           alt='img-location'
           width={100}
           height={100}
@@ -48,7 +83,7 @@ function CurrentWeather(props) {
       </div>
       <div className='flex justify-center items-center pt-5 pb-5'>
         <span>
-          {props.temp} {props.units == "metric" ? "°C" : "°F"}
+          {props.temp} {props.units == "metric" ? "°F" : "°C"}
         </span>
       </div>
       <div className='flex justify-center items-center pt-5 pb-5'>

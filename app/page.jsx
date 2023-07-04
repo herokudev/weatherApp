@@ -21,6 +21,17 @@ export default function Home() {
   const [weatherData, setWeatherData] = useState({});
   const [temp, setTemp] = useState(15);
   const [weatherMain, setWeatherMain] = useState("Shower");
+  const [imgCurrent, setImgCurrent] = useState("09_Shower.png");
+  const [dailyMin, setDailyMin] = useState(11);
+  const [dailyMax, setDailyMax] = useState(16);
+  const [dailyMin1, setDailyMin1] = useState(11);
+  const [dailyMax1, setDailyMax1] = useState(16);
+  const [dailyMin2, setDailyMin2] = useState(11);
+  const [dailyMax2, setDailyMax2] = useState(16);
+  const [dailyMin3, setDailyMin3] = useState(11);
+  const [dailyMax3, setDailyMax3] = useState(16);
+  const [dailyMin4, setDailyMin4] = useState(11);
+  const [dailyMax4, setDailyMax4] = useState(16);
 
   const getWeatherData = async () => {
     const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=${units}&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
@@ -31,12 +42,30 @@ export default function Home() {
       setWeatherData(info);
       if (weatherData["current"]["temp"])
         setTemp(weatherData["current"]["temp"]);
-      console.log(
-        "weatherData.current.weather[0][id] --> " +
-          weatherData["current"]["weather"]["0"]["main"]
-      );
       if (weatherData["current"]["weather"]["0"]["main"])
         setWeatherMain(weatherData["current"]["weather"]["0"]["main"]);
+      if (weatherData["current"]["weather"]["0"]["icon"])
+        setImgCurrent(weatherData["current"]["weather"]["0"]["icon"]);
+      if (weatherData["daily"]["0"]["temp"]["min"])
+        setDailyMin(weatherData["daily"]["0"]["temp"]["min"]);
+      if (weatherData["daily"]["0"]["temp"]["max"])
+        setDailyMax(weatherData["daily"]["0"]["temp"]["max"]);
+      if (weatherData["daily"]["1"]["temp"]["min"])
+        setDailyMin1(weatherData["daily"]["1"]["temp"]["min"]);
+      if (weatherData["daily"]["1"]["temp"]["max"])
+        setDailyMax1(weatherData["daily"]["1"]["temp"]["max"]);
+      if (weatherData["daily"]["2"]["temp"]["min"])
+        setDailyMin2(weatherData["daily"]["2"]["temp"]["min"]);
+      if (weatherData["daily"]["2"]["temp"]["max"])
+        setDailyMax2(weatherData["daily"]["2"]["temp"]["max"]);
+      if (weatherData["daily"]["3"]["temp"]["min"])
+        setDailyMin3(weatherData["daily"]["3"]["temp"]["min"]);
+      if (weatherData["daily"]["3"]["temp"]["max"])
+        setDailyMax3(weatherData["daily"]["3"]["temp"]["max"]);
+      if (weatherData["daily"]["4"]["temp"]["min"])
+        setDailyMin4(weatherData["daily"]["4"]["temp"]["min"]);
+      if (weatherData["daily"]["4"]["temp"]["max"])
+        setDailyMax4(weatherData["daily"]["4"]["temp"]["max"]);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -174,6 +203,7 @@ export default function Home() {
         )}
 
         <CurrentWeather
+          imgCurrent={imgCurrent}
           temp={temp}
           units={units}
           weatherMain={weatherMain}
@@ -194,11 +224,11 @@ export default function Home() {
           ></CustomButton>
         </div>
         <div className='bg-[#100E1D] mx-6 px-5 py-6 grid grid-cols-2 md:grid-cols-6 gap-6'>
-          <Forecast index={1} />
-          <Forecast index={2} />
-          <Forecast index={3} />
-          <Forecast index={4} />
-          <Forecast index={5} />
+          <Forecast index={1} min={dailyMin} max={dailyMax} units={units} />
+          <Forecast index={2} min={dailyMin1} max={dailyMax1} units={units} />
+          <Forecast index={3} min={dailyMin2} max={dailyMax2} units={units} />
+          <Forecast index={4} min={dailyMin3} max={dailyMax3} units={units} />
+          <Forecast index={5} min={dailyMin4} max={dailyMax4} units={units} />
         </div>
         <div>
           <div className='mx-6 px-5 py-6'>

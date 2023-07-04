@@ -1,5 +1,3 @@
-let apiDegs = 255;
-
 function getDirectionAbbreviation(degrees) {
   // Make sure degrees is between 0 and 360
   degrees = (degrees + 360) % 360;
@@ -33,8 +31,6 @@ function getDirectionAbbreviation(degrees) {
   return direction ? direction.abbreviation : "";
 }
 
-let winDir = getDirectionAbbreviation(apiDegs);
-
 function Flecha() {
   return (
     <svg
@@ -49,17 +45,22 @@ function Flecha() {
   );
 }
 
-function Wind() {
+function Wind(props) {
+  let winDir = getDirectionAbbreviation(props.windDegrees);
+
   return (
     <div className='w-[250px] h-[204px] bg-[#1E213A] px-8 py-3'>
       <div className='text-sm flex justify-center items-center pt-8'>
         Wins Status
       </div>
-      <div className='text-5xl flex justify-center items-center'>7mph</div>
+      <div className='text-5xl flex justify-center items-center'>
+        {props.windSpeed}
+        {props.units == "metric" ? "mph" : "kms"}
+      </div>
       <div className='flex justify-around items-center'>
         <div
           className='bg-[#616475] w-[25px] h-[25px] rounded-full'
-          style={{ transform: `rotate(${apiDegs}deg)` }}
+          style={{ transform: `rotate(${props.windDegrees}deg)` }}
         >
           <Flecha />
         </div>

@@ -32,6 +32,11 @@ export default function Home() {
   const [dailyMax3, setDailyMax3] = useState(16);
   const [dailyMin4, setDailyMin4] = useState(11);
   const [dailyMax4, setDailyMax4] = useState(16);
+  const [windSpeed, setWindSpeed] = useState(7);
+  const [windDegrees, setWindDegrees] = useState(250);
+  const [humidity, setHumidity] = useState(84);
+  const [pressure, setPressure] = useState(998);
+  const [visibility, setVisibility] = useState("6,4");
 
   const getWeatherData = async () => {
     const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=${units}&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
@@ -66,6 +71,16 @@ export default function Home() {
         setDailyMin4(weatherData["daily"]["4"]["temp"]["min"]);
       if (weatherData["daily"]["4"]["temp"]["max"])
         setDailyMax4(weatherData["daily"]["4"]["temp"]["max"]);
+      if (weatherData["current"]["wind_speed"])
+        setWindSpeed(weatherData["current"]["wind_speed"]);
+      if (weatherData["current"]["wind_deg"])
+        setWindDegrees(weatherData["current"]["wind_deg"]);
+      if (weatherData["current"]["humidity"])
+        setHumidity(weatherData["current"]["humidity"]);
+      if (weatherData["current"]["pressure"])
+        setPressure(weatherData["current"]["pressure"]);
+      if (weatherData["current"]["visibility"])
+        setVisibility(weatherData["current"]["visibility"]);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -110,11 +125,11 @@ export default function Home() {
   };
 
   const handleUnitsC = () => {
-    setUnits("metric");
+    setUnits("imperial");
   };
 
   const handleUnitsF = () => {
-    setUnits("imperial");
+    setUnits("metric");
   };
 
   return (
@@ -235,10 +250,14 @@ export default function Home() {
             <h1>Today's Highlights</h1>
           </div>
           <div className='bg-[#100E1D] text-white max-w-[1015px] mx-3 px-2 py-6 grid sm:grid-cols-1 md:grid-cols-2 gap-2'>
-            <Wind />
-            <Humidity />
-            <Visibility />
-            <Pressure />
+            <Wind
+              windSpeed={windSpeed}
+              units={units}
+              windDegrees={windDegrees}
+            />
+            <Humidity humidity={humidity} />
+            <Visibility visibility={visibility} units={units} />
+            <Pressure pressure={pressure} />
           </div>
         </div>
       </section>

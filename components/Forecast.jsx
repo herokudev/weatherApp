@@ -43,10 +43,10 @@ function Forecast(props) {
         />
       </div>
       <div className='text-sm flex justify-around items-center px-2 py-3'>
-        <div>
+        <div className='text-sm'>
           {props.min} {props.units == "metric" ? "°F" : "°C"}
         </div>
-        <div>
+        <div className='text-sm'>
           {props.max} {props.units == "metric" ? "°F" : "°C"}
         </div>
       </div>

@@ -55,7 +55,7 @@ function Wind(props) {
       </div>
       <div className='text-5xl flex justify-center items-center'>
         {props.windSpeed}
-        {props.units == "metric" ? "mph" : "kms"}
+        {props.units == "metric" ? "miles" : "kms"}
       </div>
       <div className='flex justify-around items-center'>
         <div

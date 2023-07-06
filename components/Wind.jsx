@@ -49,22 +49,22 @@ function Wind(props) {
   let winDir = getDirectionAbbreviation(props.windDegrees);
 
   return (
-    <div className='w-[250px] h-[204px] bg-[#1E213A] px-8 py-3'>
+    <div className='w-[328px] h-[204px] bg-[#1E213A] mb-5'>
       <div className='text-sm flex justify-center items-center pt-8'>
-        Wins Status
+        Wind Status
       </div>
-      <div className='text-5xl flex justify-center items-center'>
+      <div className='text-5xl flex justify-center items-center font-[Raleway]'>
         {props.windSpeed}
         {props.units == "metric" ? "miles" : "kms"}
       </div>
-      <div className='flex justify-around items-center'>
+      <div className='flex justify-center items-center'>
         <div
           className='bg-[#616475] w-[25px] h-[25px] rounded-full'
           style={{ transform: `rotate(${props.windDegrees}deg)` }}
         >
           <Flecha />
         </div>
-        <div>{winDir}</div>
+        <div className=' px-3'>{winDir}</div>
       </div>
     </div>
   );
